@@ -1,0 +1,24 @@
+{
+  "name": "war_card_game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Card_deck.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lion-frog/WEEK-6---WAR-Card-Game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lion-frog/WEEK-6---WAR-Card-Game/issues"
+  },
+  "homepage": "https://github.com/lion-frog/WEEK-6---WAR-Card-Game#readme",
+  "dependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  }
+}

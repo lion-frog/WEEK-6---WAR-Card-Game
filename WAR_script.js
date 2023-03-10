@@ -21,7 +21,7 @@ let playerDeck1, playerDeck2, inRound, stop;
 
 if (stop) {
   startGame();
-  return;
+  //return;
 }
 class Deck {
   constructor() {
@@ -44,6 +44,7 @@ class Deck {
       "Q",
       "K",
     ];
+    console.log(this.cards, this.SUITS);
   }
   // 'getter' or get binds an object property to a function
   get numberOfCards() {
@@ -94,6 +95,7 @@ function startGame() {
   const deck = new Deck();
   deck.freshDeck();
   deck.shuffle();
+  console.log(startGame);
 
   //split deck into two equal piles, .ceil theoretically corrects a rounding error. Fortunately 52 divides equally
   const deckMidpoint = Math.ceil(deck.numberOfCards / 2);
@@ -102,7 +104,7 @@ function startGame() {
   // this deals the second set of leftover 26 cards to player 2
   playerDeck2 = new Deck(deck.cards.slice(0, deckMidpoint, deck.numberOfCards));
   inRound = false;
-  stop = False;
+  stop = false;
 
   updateDeckCount();
 
@@ -113,7 +115,7 @@ startGame(); //calls the function start game
 
 function cleanBeforeRound() {
   inRound = false;
-  Text.innerText = "";
+  //text.innerText = "";
 
   updateDeckCount();
 
@@ -126,19 +128,18 @@ function cleanBeforeRound() {
     playerDeck.push(playerDeck1);
     playerDeck.push(playerDeck2);
   } else {
-    text.innerText = "Draw";
+    //text.innerText = "Draw";
     playerDeck1.push(playerDeck1);
     playerDeck2.push(playerDeck2);
   }
-
-  if (isGameOver(playerDeck)) {
-    text.innerText = "You Lose!";
-    stop = true;
-  } else if (isGameOver(playerDeck2)) {
-    text.innerText = "You Win!";
-    stop = true;
-  }
+  //if (isGameOver(playerDeck)) {
+  // text.innerText = "You Lose!";
+  stop = true;
+  // } else if (isGameOver(playerDeck2)) {
+  //text.innerText = "You Win!";
+  stop = true;
 }
+//}
 
 function flipCards() {
   inRound = true;
