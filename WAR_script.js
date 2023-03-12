@@ -178,3 +178,4 @@ class Game {
 
 const game = new Game(); //start game
 game.createGame();
+f;
