@@ -1,35 +1,10 @@
-const CARD_VALUE_MAP = {
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-  9: 9,
-  10: 10,
-  J: 11,
-  Q: 12,
-  J: 13,
-  K: 13,
-  A: 14,
-};
-
-let playerDeck1, playerDeck2, inRound, stop;
-// general deck, so can be used for a later game
-// create all the cards in deck, all Caps to represent a Global Constant Variable (satic)
-
-if (stop) {
-  startGame();
-  //return;
-}
-class Deck {
-  constructor() {
-    // This class encapsulates everything defined as Cards
-    this.cards = [];
-    this.SUITS = ["♠", "♣", "♥", "♦"];
+class Card {
+  // This Class defines the rank, suit, and values of the cards
+  constructor(rank, suit, value) {
+    this.rank = rank;
+    this.suit = ["♠", "♣", "♥", "♦"];
     // set to an array Suits = Suits, Values = Numerical Value of Cards
-    this.VALUES = [
+    this.value = [
       "A",
       "2",
       "3",
@@ -44,19 +19,53 @@ class Deck {
       "Q",
       "K",
     ];
-    console.log(this.cards, this.SUITS);
   }
-  // 'getter' or get binds an object property to a function
-  get numberOfCards() {
-    return this.cards.length;
+}
+
+class Deck {
+  // this Class populates the deck
+  constructor() {
+    this.cards = [];
   }
 
-  push(card) {
-    this.cards.push(card);
+  get card() {
+    return this.cards;
   }
-  // Array to allow to shuffle the deck, using the for Loop. Shuffles the deck, to earlier cards that havent been played yet.
+
+  buildDeck() {
+    this.populate();
+    this.shuffle();
+    return this.cards;
+  }
+
+  populate() {
+    const suits = ["♠", "♣", "♥", "♦"];
+    const ranks = [
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "J",
+      "Q",
+      "K",
+      "A",
+    ];
+    const values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+
+    for (let i = 0; i < suits.length; i++) {
+      for (let a = 0; a < ranks.length; a++) {
+        this.cards.push(new Card(ranks[a], suits[i], values[a]));
+      }
+    }
+  }
+
   shuffle() {
-    for (let i = this.numberOfCards - 1; i > 0; i--) {
+    for (let i = this.cards.length - 1; i > 0; i--) {
       //gives us a placement in our deck earlier in the deck where we currently are, random index,
       const newIndex = Math.floor(Math.random() * (i + 1));
       // grabs old card, swaps new card
@@ -68,89 +77,104 @@ class Deck {
       // gives us a perfectly random shuffle every time
     }
   }
-
   // create a new deck, with all 52 suits and value combinations
   freshDeck() {
     /* loop through all the suits, loop through all the values, 
-    and combine them altogether inside one array */
-    return this.SUITS.flatMap((suit) => {
+      and combine them altogether inside one array */
+    return this.suit.flatMap((suit) => {
       console.log("flatMap suit:", suit);
       //flat map works similar to map,  condenses all arrays into one array
-      return this.VALUES.map((value) => {
+      return this.value.map((value) => {
         return new Card(suit, value);
       });
     });
   }
 }
 
-class Card {
-  constructor(suit, value) {
-    this.suit = suit;
-    this.value = value;
+class Player {
+  constructor(name) {
+    this.playerName = name; // defines the player
+    this.playerScore = 0;
+    this.playerDeck = [];
+  }
+
+  get name() {
+    return this.playerName;
+  }
+
+  get deck() {
+    return this.playerDeck;
+  }
+
+  get score() {
+    return this.playerScore;
+  }
+  set deck(newDeck) {
+    if (Array.isArray(newDeck)) {
+      this.playerDeck = newDeck;
+    }
+  }
+
+  set score(newScore) {
+    if (newScore != isNaN) {
+      this.playerScore = newScore;
+    }
   }
 }
 
-//start game function - begin
-function startGame() {
-  const deck = new Deck();
-  deck.freshDeck();
-  deck.shuffle();
-  console.log(startGame);
-
-  //split deck into two equal piles, .ceil theoretically corrects a rounding error. Fortunately 52 divides equally
-  const deckMidpoint = Math.ceil(deck.numberOfCards / 2);
-  //shuffles first 26 cards to player1
-  playerDeck1 = new Deck(deck.cards.slice(0, deckMidpoint));
-  // this deals the second set of leftover 26 cards to player 2
-  playerDeck2 = new Deck(deck.cards.slice(0, deckMidpoint, deck.numberOfCards));
-  inRound = false;
-  stop = false;
-
-  updateDeckCount();
-
-  cleanBeforeRound();
-} //Start game function - end
-
-startGame(); //calls the function start game
-
-function cleanBeforeRound() {
-  inRound = false;
-  //text.innerText = "";
-
-  updateDeckCount();
-
-  if (isRoundWinner(playerDeck1, playerDeck2)) {
-    text.innerText = "Win";
-    playerDeck.push(playerDeck1);
-    playerDeck.push(playerDeck2);
-  } else if (isRoundWinner(playerDeck2, playerDeck1)) {
-    text.innerText = "Lose";
-    playerDeck.push(playerDeck1);
-    playerDeck.push(playerDeck2);
-  } else {
-    //text.innerText = "Draw";
-    playerDeck1.push(playerDeck1);
-    playerDeck2.push(playerDeck2);
+class Game {
+  constructor() {
+    this.players = [];
+    this.deck = [];
   }
-  //if (isGameOver(playerDeck)) {
-  // text.innerText = "You Lose!";
-  stop = true;
-  // } else if (isGameOver(playerDeck2)) {
-  //text.innerText = "You Win!";
-  stop = true;
-}
-//}
 
-function flipCards() {
-  inRound = true;
+  createGame() {
+    this.players[0] = new Player(
+      prompt("Whom do I have the pleasure of going to War with?") // message prompt to begin game
+    );
+    this.players[1] = new Player("Computer"); // second player automated
+
+    console.log(`Game on ${this.players[0].name}!`);
+
+    const cards = new Deck().buildDeck();
+
+    this.players[0].deck = [...cards.slice(0, 26)]; //split deck into two equal piles, .ceil theoretically corrects a rounding error. Fortunately 52 divides equally
+    this.players[1].deck = [...cards.slice(26, 52)];
+
+    console.log("I DECLARE WAR!!!"); // prompt
+
+    for (let i = 0; i < this.players[0].deck.length; i++) {
+      if (this.players[0].deck[i].value > this.players[1].deck[i].value) {
+        this.players[0].score += 1;
+        let winningHand = `${this.players[0].deck[i].rank} of ${this.players[0].deck[i].suit}`;
+        console.log(`${this.players[0].name} has won with ${winningHand}`);
+      } else {
+        this.players[1].score += 1;
+        let winningHand = `${this.players[1].deck[i].rank} of ${this.players[0].deck[i].suit}`;
+        console.log(`Computer has won with ${winningHand}`);
+      }
+    }
+
+    console.log("Game Over!");
+    if (this.players[0].score > this.players[1].score) {
+      console.log(
+        `${this.players[0].name.toUpperCase()} WON WAR with a score of ${
+          // prompt declaring the winner
+          this.players[0].score
+        }`
+      );
+    } else if (this.players[0].score < this.players[1].score) {
+      console.log(
+        `${this.players[1].name.toUpperCase()} WON WAR with a score of ${
+          // prompt declaring the winner
+          this.players[1].score
+        }`
+      );
+    } else {
+      console.log(`${this.players[0].name.toUpperCase()} AND COMPUTER TIED!`); // prompt declaring the tie
+    }
+  }
 }
 
-function updateDeckCount() {}
-
-function isRoundWinner(cardOne, cardTwo) {
-  return CARD_VALUE_MAP[cardOne.value] > CARD_VALUE_MAP[cardTwo.value];
-}
-
-function isGameOver(deck) {
-  return deck.numberOfCards == 0;
-}
+const game = new Game();
+game.createGame();
